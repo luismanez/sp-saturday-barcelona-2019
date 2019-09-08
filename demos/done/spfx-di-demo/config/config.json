@@ -1,0 +1,27 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "counter-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/counter/CounterWebPart.js",
+          "manifest": "./src/webparts/counter/CounterWebPart.manifest.json"
+        }
+      ]
+    },
+    "scoped-counter-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/scopedCounter/ScopedCounterWebPart.js",
+          "manifest": "./src/webparts/scopedCounter/ScopedCounterWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "CounterWebPartStrings": "lib/webparts/counter/loc/{locale}.js",
+    "ScopedCounterWebPartStrings": "lib/webparts/scopedCounter/loc/{locale}.js"
+  }
+}
