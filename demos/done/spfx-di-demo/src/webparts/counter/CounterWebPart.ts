@@ -1,15 +1,18 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
+import { Version, EnvironmentType, Environment } from '@microsoft/sp-core-library';
+import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import {
-  BaseClientSideWebPart,
   IPropertyPaneConfiguration,
   PropertyPaneTextField
-} from '@microsoft/sp-webpart-base';
+} from '@microsoft/sp-property-pane';
 
 import * as strings from 'CounterWebPartStrings';
 import Counter from './components/Counter';
 import { ICounterProps } from './components/ICounterProps';
+import { ICounterService } from '../../services/ICounterService';
+import { CounterServiceKey } from '../../services/CounterService';
+import { DoubleCounterServiceKey } from '../../services/DoubleCounterService';
 
 export interface ICounterWebPartProps {
   description: string;
@@ -18,10 +21,25 @@ export interface ICounterWebPartProps {
 export default class CounterWebPart extends BaseClientSideWebPart<ICounterWebPartProps> {
 
   public render(): void {
-    const element: React.ReactElement<ICounterProps > = React.createElement(
+
+    //const counterServiceInstance: ICounterService = this.context.serviceScope.consume(CounterServiceKey);
+    //const counterServiceInstance: ICounterService = this.context.serviceScope.consume(DoubleCounterServiceKey);
+    let counterServiceInstance: ICounterService;
+    switch (Environment.type) {
+      case EnvironmentType.Local:
+        counterServiceInstance = this.context.serviceScope.consume(CounterServiceKey);
+        break;
+
+      default:
+        counterServiceInstance = this.context.serviceScope.consume(DoubleCounterServiceKey);
+        break;
+    }
+
+    const element: React.ReactElement<ICounterProps> = React.createElement(
       Counter,
       {
-        description: this.properties.description
+        description: this.properties.description,
+        counterService: counterServiceInstance
       }
     );
 

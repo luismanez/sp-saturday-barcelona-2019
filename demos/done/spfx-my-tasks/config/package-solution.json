@@ -5,7 +5,13 @@
     "id": "5494f162-f4c1-409d-bcb6-1b1789e8dfd9",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
-    "isDomainIsolated": false
+    "isDomainIsolated": false,
+    "webApiPermissionRequests": [
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Group.Read.All"
+      }
+    ]
   },
   "paths": {
     "zippedPackage": "solution/spfx-my-tasks.sppkg"

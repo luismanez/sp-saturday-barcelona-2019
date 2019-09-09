@@ -1,15 +1,17 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
+import { Version, ServiceScope } from '@microsoft/sp-core-library';
+import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import {
-  BaseClientSideWebPart,
   IPropertyPaneConfiguration,
   PropertyPaneTextField
-} from '@microsoft/sp-webpart-base';
+} from '@microsoft/sp-property-pane';
 
 import * as strings from 'ScopedCounterWebPartStrings';
-import ScopedCounter from './components/ScopedCounter';
-import { IScopedCounterProps } from './components/IScopedCounterProps';
+import { ICounterService } from '../../services/ICounterService';
+import Counter from '../counter/components/Counter';
+import { DoubleCounterServiceKey } from '../../services/DoubleCounterService';
+import { ICounterProps } from '../counter/components/ICounterProps';
 
 export interface IScopedCounterWebPartProps {
   description: string;
@@ -18,10 +20,16 @@ export interface IScopedCounterWebPartProps {
 export default class ScopedCounterWebPart extends BaseClientSideWebPart<IScopedCounterWebPartProps> {
 
   public render(): void {
-    const element: React.ReactElement<IScopedCounterProps > = React.createElement(
-      ScopedCounter,
+
+    const serviceScope: ServiceScope = this.context.serviceScope.startNewChild();
+    const scopedCounterServiceInstance: ICounterService = serviceScope.createDefaultAndProvide(DoubleCounterServiceKey);
+    serviceScope.finish();
+
+    const element: React.ReactElement<ICounterProps > = React.createElement(
+      Counter,
       {
-        description: this.properties.description
+        description: this.properties.description,
+        counterService: scopedCounterServiceInstance
       }
     );
 
